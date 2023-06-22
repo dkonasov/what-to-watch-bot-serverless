@@ -53,6 +53,7 @@ func get_main_menu(update *tgbotapi.Update) (tgbotapi.MessageConfig, error) {
 	var msg tgbotapi.MessageConfig
 	err := set_step(strconv.FormatInt(update.Message.Chat.ID, 10), MainMenu)
 	has_lists := false
+	has_items := false
 	var lists []List
 	var db *gorm.DB
 
@@ -60,7 +61,7 @@ func get_main_menu(update *tgbotapi.Update) (tgbotapi.MessageConfig, error) {
 		db, err = get_db()
 
 		if err == nil {
-			query_result := db.Where("\"user\" = ?", strconv.FormatInt(update.Message.Chat.ID, 10)).Find(&lists)
+			query_result := db.Where("\"user\" = ?", strconv.FormatInt(update.Message.Chat.ID, 10)).Preload("Items").Find(&lists)
 			err = query_result.Error
 			has_lists = query_result.RowsAffected > 0
 		}
@@ -81,19 +82,14 @@ func get_main_menu(update *tgbotapi.Update) (tgbotapi.MessageConfig, error) {
 				tgbotapi.NewKeyboardButton("Add item to list"),
 			))
 
-			var lists_ids []uint
 			for _, list := range lists {
-				lists_ids = append(lists_ids, list.ID)
+				if len(list.Items) > 0 {
+					has_items = true
+					break
+				}
 			}
 
-			var items []Item
-			result := db.Where("list_id IN ?", lists_ids).Find(&items)
-
-			if result.Error != nil {
-				return msg, result.Error
-			}
-
-			if result.RowsAffected > 0 {
+			if has_items {
 				keyboard.Keyboard = append(keyboard.Keyboard, tgbotapi.NewKeyboardButtonRow(
 					tgbotapi.NewKeyboardButton("Get item from list"),
 				))
@@ -212,7 +208,6 @@ func create_new_item(update *tgbotapi.Update) (tgbotapi.MessageConfig, error) {
 
 func display_lists_for_withdraw(update *tgbotapi.Update) (tgbotapi.MessageConfig, error) {
 	var lists []List
-	var items []Item
 	var msg tgbotapi.MessageConfig
 	db, err := get_db()
 
@@ -220,35 +215,17 @@ func display_lists_for_withdraw(update *tgbotapi.Update) (tgbotapi.MessageConfig
 		return msg, err
 	}
 
-	result := db.Where("\"user\" = ?", strconv.FormatInt(update.Message.Chat.ID, 10)).Find(&lists)
+	result := db.Where("\"user\" = ?", strconv.FormatInt(update.Message.Chat.ID, 10)).Preload("Items").Find(&lists)
 
 	if result.Error != nil {
 		return msg, result.Error
-	}
-
-	var list_ids []uint
-
-	for _, list := range lists {
-		list_ids = append(list_ids, list.ID)
-	}
-
-	result = db.Where("list_id IN ?", list_ids).Find(&items)
-
-	if result.Error != nil {
-		return msg, result.Error
-	}
-
-	lists_with_items_id := make(map[uint]bool)
-
-	for _, item := range items {
-		lists_with_items_id[item.ListID] = true
 	}
 
 	keyboard := tgbotapi.NewReplyKeyboard()
 	keyboard.OneTimeKeyboard = true
 
 	for _, list := range lists {
-		if lists_with_items_id[list.ID] {
+		if len(list.Items) > 0 {
 			keyboard.Keyboard = append(keyboard.Keyboard, tgbotapi.NewKeyboardButtonRow(
 				tgbotapi.NewKeyboardButton(list.Name),
 			))
