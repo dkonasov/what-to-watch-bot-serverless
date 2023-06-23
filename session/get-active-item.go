@@ -1,4 +1,4 @@
-package main
+package session
 
 import (
 	"context"
@@ -8,7 +8,7 @@ import (
 	redis "github.com/go-redis/redis/v8"
 )
 
-func get_step(user string) (int64, error) {
+func Get_active_item(user string) (uint, error) {
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     os.Getenv("REDIS_URL"),
 		Password: os.Getenv("REDIS_PASSWORD"),
@@ -16,17 +16,17 @@ func get_step(user string) (int64, error) {
 	})
 	ctx := context.Background()
 
-	raw_step, err := rdb.HGet(ctx, user, "step").Result()
+	raw_value, err := rdb.HGet(ctx, user, "active_item").Result()
 
 	if err == nil || err.Error() == "redis: nil" {
 		if err != nil {
 			return 0, nil
 		}
 
-		step, err := strconv.ParseInt(raw_step, 10, 64)
+		item, err := strconv.ParseUint(raw_value, 10, 32)
 
 		if err == nil {
-			return step, nil
+			return uint(item), nil
 		}
 	}
 
