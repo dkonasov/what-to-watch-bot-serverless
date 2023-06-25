@@ -10,7 +10,7 @@ jobs:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
           bucket: ${{ secrets.BUCKET }}
           folder-id: ${{ secrets.YC_FOLDER }}
-          service-account: ajerle0o3vucuodpcoqe
+          service-account: main
           function-name: 'what-to-watch-bot-serveless'
           runtime: 'golang118'
           entrypoint: 'handler.Handler'
