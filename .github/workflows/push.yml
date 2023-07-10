@@ -15,6 +15,10 @@ jobs:
           runtime: 'golang118'
           entrypoint: 'handler.Handler'
           network-id: enp43oc6r9biomtgd64e
+          exclude: |
+            .git
+            .gitignore
+            .github
           environment: | 
             PG_DB=db1
             PG_HOST=c-c9qhuo07tkrq5iljhm6a.rw.mdb.yandexcloud.net
