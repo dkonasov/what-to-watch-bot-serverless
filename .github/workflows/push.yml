@@ -20,7 +20,7 @@ jobs:
             PG_PORT=6432
             PG_USER=dkonasov
             REDIS_URL=rc1b-40gcw7ys62ej6o5p.mdb.yandexcloud.net:6379
-          secrets:
+          secrets: |
             TOKEN=e6q8j79rhn3kppgu3fgm/e6qb0lc8p484n9f0vq7d/WHAT_TO_WATCH_BOT_TOKEN
             REDIS_PASSWORD=e6qr7m3l78mtmfs7talc/e6qsocdrgfukpv7ec5d1/REDIS_PASSWORD
             PG_PASSWORD=e6qr7m3l78mtmfs7talc/e6qsocdrgfukpv7ec5d1/POSTGRES_PASSWORD
