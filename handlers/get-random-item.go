@@ -58,6 +58,9 @@ func Get_random_item(update *tgbotapi.Update) (tgbotapi.MessageConfig, error) {
 		tgbotapi.NewKeyboardButtonRow(
 			tgbotapi.NewKeyboardButton("Get another"),
 		),
+		tgbotapi.NewKeyboardButtonRow(
+			tgbotapi.NewKeyboardButton("Main menu"),
+		),
 	)
 
 	return msg, err

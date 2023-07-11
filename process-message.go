@@ -38,10 +38,13 @@ func process_message(update *tgbotapi.Update) (tgbotapi.MessageConfig, error) {
 	case session.SelectListForItemWithdraw:
 		msg, err = handlers.Get_random_item(update)
 	case session.DisplayRandowItem:
-		if update.Message.Text == "Take" {
+		switch update.Message.Text {
+		case "Take":
 			msg, err = handlers.Take_item(update)
-		} else {
+		case "Get another":
 			msg, err = handlers.Get_another_random_item(update)
+		default:
+			msg, err = handlers.Get_main_menu(update)
 		}
 	default:
 		msg, err = handlers.Get_main_menu(update)
