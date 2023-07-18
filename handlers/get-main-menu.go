@@ -54,6 +54,8 @@ func Get_main_menu(update *tgbotapi.Update) (tgbotapi.MessageConfig, error) {
 			if has_items {
 				keyboard.Keyboard = append(keyboard.Keyboard, tgbotapi.NewKeyboardButtonRow(
 					tgbotapi.NewKeyboardButton("Get item from list"),
+				), tgbotapi.NewKeyboardButtonRow(
+					tgbotapi.NewKeyboardButton("Show items"),
 				))
 			}
 

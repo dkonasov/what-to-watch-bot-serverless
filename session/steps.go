@@ -8,4 +8,6 @@ const (
 	GetNewItemName
 	SelectListForItemWithdraw
 	DisplayRandowItem
+	SelectListForItemsDisplay
+	ItemsListDisplayed
 )

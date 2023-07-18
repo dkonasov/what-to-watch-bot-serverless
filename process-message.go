@@ -28,6 +28,8 @@ func process_message(update *tgbotapi.Update) (tgbotapi.MessageConfig, error) {
 			msg, err = handlers.Get_add_to_list(update)
 		case "Get item from list":
 			msg, err = handlers.Display_lists_for_withdraw(update)
+		case "Show items":
+			msg, err = handlers.Display_lists_for_items_list(update)
 		default:
 			msg, err = handlers.Get_main_menu(update)
 		}
@@ -46,6 +48,8 @@ func process_message(update *tgbotapi.Update) (tgbotapi.MessageConfig, error) {
 		default:
 			msg, err = handlers.Get_main_menu(update)
 		}
+	case session.SelectListForItemsDisplay:
+		msg, err = handlers.Display_items_list(update)
 	default:
 		msg, err = handlers.Get_main_menu(update)
 	}
